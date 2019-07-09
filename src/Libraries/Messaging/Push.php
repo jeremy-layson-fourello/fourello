@@ -47,12 +47,17 @@ class Push {
 
     }
 
-    /**
-     * Get all topics using the AWS credential
-     */
     public function getAllTopics()
     {
+        try {
+            $list = $SnSclient->listTopics([]);
 
+            return $list;
+        } catch (AwsException $e) {
+            \Log::error($e->getMessage());
+
+            return [];
+        }
     }
 
     /**
@@ -67,7 +72,7 @@ class Push {
 
             return $data;
         } catch (Exception $e) {
-            \Log::info($e->getMessage());
+            \Log::error($e->getMessage());
 
             return FALSE;
         }
@@ -76,9 +81,19 @@ class Push {
     /**
      * Get all topics using the AWS credential
      */
-    public function deleteTopic()
+    public function deleteTopic($arn)
     {
+        try {
+            $result = $SnSclient->deleteTopic([
+                'TopicArn' => $arn,
+            ]);
+            
+            return $result;
+        } catch (AwsException $e) {
+            \Log::error($e->getMessage());
 
+            return FALSE;
+        } 
     }
 
 
