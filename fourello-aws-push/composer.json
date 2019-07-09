@@ -1,5 +1,5 @@
 {
-    "name": "Fourello/aws-push-notification",
+    "name": "fourello/fourello-aws-push",
     "type": "library",
     "description": "A push notification for mobile devices powered with Amazon Web Services (AWS) Simple Notification Service (SNS)",
     "keywords": ["aws", "push", "notification", "mobile", "android", "ios"],
