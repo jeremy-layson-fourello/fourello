@@ -50,7 +50,7 @@ class Push {
     public function getAllTopics()
     {
         try {
-            $list = $SnSclient->listTopics([]);
+            $list = $this->client->listTopics([]);
 
             return $list;
         } catch (AwsException $e) {
@@ -84,7 +84,7 @@ class Push {
     public function deleteTopic($arn)
     {
         try {
-            $result = $SnSclient->deleteTopic([
+            $result = $this->client->deleteTopic([
                 'TopicArn' => $arn,
             ]);
             
