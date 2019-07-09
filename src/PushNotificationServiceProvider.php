@@ -17,10 +17,10 @@ class PushNotificationServiceProvider extends ServiceProvider {
 
         // publish other files
         $this->publishes([
-            __DIR__ . '/../Models' => base_path('app/Models'),
-            __DIR__ . '/../Controllers' => base_path('app/Http/Controllers'),
-            __DIR__ . '/../Libraries' => base_path('app/Libraries'),
-            __DIR__ . '/../config/fourello-push' => config_path('fourello-push.php'),
+            __DIR__ . '/Models' => base_path('app/Models'),
+            __DIR__ . '/Controllers' => base_path('app/Http/Controllers'),
+            __DIR__ . '/Libraries' => base_path('app/Libraries'),
+            __DIR__ . '/config/fourello-push.php' => config_path('fourello-push.php'),
         ]);
     }
 
