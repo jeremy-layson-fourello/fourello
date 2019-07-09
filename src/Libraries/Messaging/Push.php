@@ -3,9 +3,111 @@ namespace App\Libraries\Messaging;
 
 use Aws\Sns\Exception\SnsException;
 use Illuminate\Support\Facades\App;
-
+use App\Models\UserDevice;
+use App\Models\User;
+use Aws\Sns\SnsClient; 
 
 class Push {
+
+    protected $client;
+
+    protected $targetARN = NULL;
+
+    /**
+     * Create the client object that will be used throughout the class
+     */
+    public function __construct()
+    {
+        $this->client = App::make('aws')->createClient('sns');
+    }
+
+    /**
+     * message = ['title' => '', 'content'  => '', 'category'   => ''];
+     */
+    public function publishToUser($message, UserDevice $device)
+    {
+
+    }
+
+    public function publishToArn()
+    {
+
+    }
+
+    public function publishToTopic()
+    {
+
+    }
+
+    /**
+     * Get a list of registered devices of user
+     */
+    public function getRegisteredDevices()
+    {
+
+    }
+
+    /**
+     * Get all topics using the AWS credential
+     */
+    public function getAllTopics()
+    {
+
+    }
+
+    /**
+     * Get all topics using the AWS credential
+     */
+    public function createTopic($name)
+    {
+        try {
+            $data = $this->client->createTopic([
+                'Name'  => $name
+            ]);
+
+            return $data;
+        } catch (Exception $e) {
+            \Log::info($e->getMessage());
+
+            return FALSE;
+        }
+    }
+
+    /**
+     * Get all topics using the AWS credential
+     */
+    public function deleteTopic()
+    {
+
+    }
+
+
+    /**
+     * Get all topics using the AWS credential
+     */
+    public function registerTokenToSNS()
+    {
+
+    }
+
+    public function unregisterTokenFromSNS()
+    {
+
+    }
+
+    public function subscribeDeviceToTopic()
+    {
+
+    }
+
+    public function unsubscribeDeviceToTopic()
+    {
+
+    }
+
+
+
+
 
     public static function sendToArn($message, $device, $title = 'Expee', $category = 'expee', $payload = [])
     {
