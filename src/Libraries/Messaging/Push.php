@@ -4,6 +4,7 @@ namespace App\Libraries\Messaging;
 use Aws\Sns\Exception\SnsException;
 use Illuminate\Support\Facades\App;
 use App\Models\UserDevice;
+use App\Models\UserTopic;
 use App\Models\User;
 use Aws\Sns\SnsClient; 
 
@@ -28,7 +29,7 @@ class Push {
     {
 
     }
-
+ 
     public function publishToArn()
     {
 
@@ -44,7 +45,15 @@ class Push {
      */
     public function getRegisteredDevices()
     {
-
+        try {
+            $result = $this->client->listSubscriptions([]);
+            
+            return $result;
+        } catch (AwsException $e) {
+            // output error message if fails
+            \Log::info($e->getMessage());
+            return $e->getMessage();
+        }
     }
 
     public function getAllTopics()
@@ -100,9 +109,17 @@ class Push {
     /**
      * Get all topics using the AWS credential
      */
-    public function registerTokenToSNS()
+    public function registerTokenToSNS(UserDevice $device, $topic)
     {
-
+        try {
+            $result = $this->client->subscribe([
+                'Endpoint' => $device->arn,
+                'Protocol' => 'application',
+                'TopicArn' => $topic->arn,
+            ]);
+        } catch (Exception $e) {
+            
+        }
     }
 
     public function unregisterTokenFromSNS()
@@ -115,9 +132,19 @@ class Push {
 
     }
 
-    public function unsubscribeDeviceToTopic()
+    public function unsubscribeDeviceToTopic($subscriptionArn)
     {
-
+        try {
+            $result = $this->client->unsubscribe([
+                'SubscriptionArn' => $subscriptionArn,
+            ]);
+            
+            return $result;
+        } catch (AwsException $e) {
+            // output error message if fails
+            \Log::info($e->getMessage());
+            return $e->getMessage();
+        } 
     }
 
 
