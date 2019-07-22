@@ -1,5 +1,5 @@
 <?php
-namespace App\Models;
+namespace Fourello\Push\Models;
 
 use App\Models\AbstractModel;
 use Illuminate\Database\Eloquent\SoftDeletes;

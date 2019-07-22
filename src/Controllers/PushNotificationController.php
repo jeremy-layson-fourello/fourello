@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Fourello\Push\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\UserDevice;
-use App\Libraries\Messaging\Push;
+use Fourell\Push\Models\UserDevice;
+use Fourello\Push\Libraries\Messaging\Push;
 use Illuminate\Support\Facades\Auth;
 
 /**

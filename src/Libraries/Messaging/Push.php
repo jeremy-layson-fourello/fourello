@@ -1,12 +1,13 @@
 <?php
-namespace App\Libraries\Messaging;
+namespace Fourello\Push\Libraries\Messaging;
 
 use Aws\Sns\Exception\SnsException;
 use Illuminate\Support\Facades\App;
-use App\Models\UserDevice;
-use App\Models\UserTopic;
+use Fourello\Push\Models\UserDevice;
+use Fourello\Push\Models\UserTopic;
 use App\Models\User;
-use Aws\Sns\SnsClient; 
+use Aws\Sns\SnsClient;
+use Fourello\Push\Messaging\Message;
 
 class Push {
 

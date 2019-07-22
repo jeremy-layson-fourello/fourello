@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Libraries\Messaging;
+namespace Fourello\Push\Libraries\Messaging;
 
 /**
  * Message object for push notification
