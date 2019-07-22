@@ -17,7 +17,7 @@ class PushNotificationController extends Controller
 {
     private $user;
 
-    private $device;\
+    private $device;
 
     public function __construct(UserDevice $device)
     {
