@@ -8,12 +8,15 @@ use Fourello\Push\Models\UserTopic;
 use App\Models\User;
 use Aws\Sns\SnsClient;
 use Fourello\Push\Messaging\Message;
-
 class Push {
 
     protected $client;
 
     protected $targetARN = NULL;
+
+    protected $user = NULL;
+
+    protected $devices = [];
 
     /**
      * Create the client object that will be used throughout the class
@@ -23,17 +26,72 @@ class Push {
         $this->client = App::make('aws')->createClient('sns');
     }
 
+    public function setUser(User $user)
+    {
+        $this->user = $user;
+
+        $this->devices = $user->Devices;
+
+        return $this;
+    }
+
+    public function hasUser()
+    {
+        return !is_null($this->user);
+    }
+
     /**
      * message = ['title' => '', 'content'  => '', 'category'   => ''];
      */
-    public function publishToUser($message, UserDevice $device)
+    public function publishToUser(Message $message)
     {
 
     }
  
-    public function publishToArn()
+    /**
+     * @todo  test
+     */
+    public function publishToArn(Message $message, UserDevice $device)
     {
+        try {
+            $client = App::make('aws')->createClient('sns');
 
+            // enable first
+            $result = $client->setEndpointAttributes([
+                'Attributes' => ['Enabled' => 'true'],
+                'EndpointArn' => $device->arn, 
+            ]);
+
+            $platformApplicationArn = '';
+            if ($device->platform == 'android') {
+                $platformApplicationArn = config('fourello-push.arn.android_arn');
+            } else {
+                $platformApplicationArn = config('fourello-push.arn.ios_arn');
+            }
+
+            $message = $messsage->generatePayload($device->platform);
+
+            $client->publish(array(
+                'TargetArn'         => $device->arn,
+                'Message'           => $message,
+                'ttl'               => 86400,
+                'MessageStructure'  => 'json'
+            ));
+
+            // re-enable first
+            $result = $client->setEndpointAttributes([
+                'Attributes' => ['Enabled' => 'true'],
+                'EndpointArn' => $device->arn, 
+            ]);
+
+            \Log::info($result);
+
+        } catch (SnsException $e) {
+            \Log::error($e->getMessage());
+            return response()->json(['error' => "Unexpected Error"], 500);
+        }
+
+        return response()->json(["status" => "Device token processed"], 200);
     }
 
     public function publishToTopic()
@@ -152,6 +210,21 @@ class Push {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+    /**
+     * @todo for deletion
+     */
     public static function sendToArn($message, $device, $title = 'Expee', $category = 'expee', $payload = [])
     {
         try {

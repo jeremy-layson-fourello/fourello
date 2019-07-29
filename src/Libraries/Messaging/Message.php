@@ -44,10 +44,10 @@ class Message {
         return $this;
     }
 
-    public function generatePayload()
+    public function generatePayload($platform = 'IOS')
     {
         $payload = [
-            'apns'  => json_encode(
+            'APNS'  => json_encode(
                 (object) [
                     'aps' => 
                     (object) [
@@ -60,7 +60,21 @@ class Message {
                         'data' => (object) $data
                     ]
                 ]),
-            'gcm'   => json_encode(
+            'APNS_SANDBOX' => json_encode(
+                (object) [
+                    'aps' => 
+                    (object) [
+                        'alert' => (object) [
+                            'title' => $this->title,
+                            'body' => $this->message
+                        ],
+                        'category' => $this->category,
+                        'sound' => 'default',
+                        'data' => (object) $data
+                    ]
+                ]),
+            'default' => '',
+            'GCM'   => json_encode(
                 (object) [
                     'notification' => (object) [
                         'body' => $this->message,
@@ -72,6 +86,12 @@ class Message {
                     'time_to_live'      => 3600,
                 ])
         ];
+
+        if (strtoupper($platform) === 'IOS') {
+            $payload['default'] = $payload['APNS'];
+        } else {
+            $payload['default'] = $payload['GCM'];
+        }
 
         return $payload;
     }
