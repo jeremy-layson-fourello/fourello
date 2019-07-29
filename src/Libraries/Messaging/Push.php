@@ -38,7 +38,7 @@ class Push {
         return $this;
     }
 
-    public function registerTokenToSNS($deviceToken, $platform = 'IOS')
+    public function registerDeviceToken($deviceToken, $platform = 'IOS')
     {
         $platformApplicationArn = '';
 
