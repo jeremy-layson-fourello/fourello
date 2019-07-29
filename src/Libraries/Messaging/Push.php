@@ -200,18 +200,20 @@ class Push {
                 'TopicArn' => $topicArn,
             ]);
 
-            \Log::info($result);
-
+            $data = [
+                '@metadata' => $result['@metadata'],
+                'SubscriptionArn'   => $result['subscriptionArn']
+            ];
+            
+            return $data;
         } catch (AwsException $e) {
             \Log::error($e->getMessage());
 
             return FALSE;
         }
-        
-        return $result['SubscriptionArn'] ?? '';
     }
 
-    public function unsubscribeDeviceToTopic($subscriptionArn)
+    public function unsubscribeDeviceToTopic(UserDevice $device, $subscriptionArn)
     {
         try {
             $result = $this->client->unsubscribe([
@@ -219,6 +221,8 @@ class Push {
             ]);
 
             $data['@metadata'] = $result['@metadata'];
+
+            $device->delete();
 
             return $data;
         } catch (AwsException $e) {
