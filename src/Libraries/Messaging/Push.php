@@ -38,6 +38,32 @@ class Push {
         return $this;
     }
 
+    public function registerTokenToSNS($deviceToken, $platform = 'IOS')
+    {
+        $platformApplicationArn = '';
+
+        if (strtoupper($platform) == 'ANDROID') {
+            $platformApplicationArn = config('fourello-push.arn.android_arn');
+        } else {
+            $platformApplicationArn = config('fourello-push.arn.ios_arn');
+        }
+
+        try {
+            $result = $this->client->createPlatformEndpoint(array(
+                'PlatformApplicationArn' => $platformApplicationArn,
+                'Token' => $deviceToken,
+            ));
+
+            \Log::info($result);
+            
+            return $result;
+        } catch (Exception $e) {
+            \Log::error($e->getMessage());
+
+            return FALSE;
+        }
+    }
+
     public function hasUser()
     {
         return !is_null($this->user);
@@ -222,7 +248,7 @@ class Push {
 
             $data['@metadata'] = $result['@metadata'];
 
-            $device->delete();
+            // $device->delete();
 
             return $data;
         } catch (AwsException $e) {
