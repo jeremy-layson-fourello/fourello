@@ -189,16 +189,18 @@ class Push {
 
     }
 
-    public function subscribeDeviceToTopic(UserDevice $device)
+    public function subscribeDeviceToTopic(UserDevice $device, $topicArn)
     {
         try {
-            $topicArn = env('AWS_SNS_TOPIC', AWS_SNS_TOPIC);
+            // $topicArn = env('AWS_SNS_TOPIC', AWS_SNS_TOPIC);
             $sns = App::make('aws')->createClient('sns');
             $result = $sns->subscribe([
                 'Endpoint' => $device->arn,
                 'Protocol' => 'application',
                 'TopicArn' => $topicArn,
             ]);
+
+            \Log::info($result);
 
         } catch (AwsException $e) {
             \Log::error($e->getMessage());
