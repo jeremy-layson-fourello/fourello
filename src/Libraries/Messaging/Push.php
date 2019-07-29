@@ -109,7 +109,7 @@ class Push {
     {
         try {
             $result = $this->client->listSubscriptions([]);
-            
+
             return $result;
         } catch (AwsException $e) {
             // output error message if fails
@@ -189,9 +189,24 @@ class Push {
 
     }
 
-    public function subscribeDeviceToTopic()
+    public function subscribeDeviceToTopic(UserDevice $device)
     {
+        try {
+            $topicArn = env('AWS_SNS_TOPIC', AWS_SNS_TOPIC);
+            $sns = App::make('aws')->createClient('sns');
+            $result = $sns->subscribe([
+                'Endpoint' => $device->arn,
+                'Protocol' => 'application',
+                'TopicArn' => $topicArn,
+            ]);
 
+        } catch (AwsException $e) {
+            \Log::error($e->getMessage());
+
+            return FALSE;
+        }
+        
+        return $result['SubscriptionArn'] ?? '';
     }
 
     public function unsubscribeDeviceToTopic($subscriptionArn)
@@ -201,9 +216,9 @@ class Push {
                 'SubscriptionArn' => $subscriptionArn,
             ]);
 
-            \Log::info($result);
-            
-            return [];
+            $data['@metadata'] = $result['@metadata'];
+
+            return $data;
         } catch (AwsException $e) {
             // output error message if fails
             \Log::info($e->getMessage());
