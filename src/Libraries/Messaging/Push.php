@@ -40,6 +40,11 @@ class Push {
 
     public function registerDeviceToken($deviceToken, $platform = 'IOS')
     {
+        // check user
+
+        if (is_null($user) === TRUE) {
+            return 'User is not set';
+        }
         $platformApplicationArn = '';
 
         if (strtoupper($platform) == 'ANDROID') {
@@ -53,6 +58,15 @@ class Push {
                 'PlatformApplicationArn' => $platformApplicationArn,
                 'Token' => $deviceToken,
             ));
+
+            $device = new UserDevice();
+
+            $device->create([
+                'device_token'  => $deviceToken,
+                'platform'      => $platform,
+                'arn'           => $result['EndpointArn'],
+                'user_id'       => $this->user->id,
+            ]);
 
             \Log::info($result);
             
@@ -92,7 +106,7 @@ class Push {
             ]);
 
             $platformApplicationArn = '';
-            if ($device->platform == 'android') {
+            if (strtoupper($device->platform) == 'ANDROID') {
                 $platformApplicationArn = config('fourello-push.arn.android_arn');
             } else {
                 $platformApplicationArn = config('fourello-push.arn.ios_arn');
