@@ -16,13 +16,16 @@ class Push {
 
     protected $user = NULL;
 
+    private $topic;
+
     protected $devices = [];
 
     /**
      * Create the client object that will be used throughout the class
      */
-    public function __construct()
+    public function __construct(UserTopic $topic)
     {
+        $this->topic = $topic;
         $this->client = App::make('aws')->createClient('sns');
     }
 
@@ -197,8 +200,10 @@ class Push {
             $result = $this->client->unsubscribe([
                 'SubscriptionArn' => $subscriptionArn,
             ]);
+
+            \Log::info($result);
             
-            return $result;
+            return [];
         } catch (AwsException $e) {
             // output error message if fails
             \Log::info($e->getMessage());
