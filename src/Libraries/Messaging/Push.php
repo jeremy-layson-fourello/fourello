@@ -46,7 +46,7 @@ class Push {
     {
         // check user
 
-        if (is_null($user) === TRUE) {
+        if (is_null($this->user) === TRUE) {
             return 'User is not set';
         }
         $platformApplicationArn = '';
