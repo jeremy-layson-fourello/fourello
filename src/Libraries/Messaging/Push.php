@@ -7,7 +7,7 @@ use Fourello\Push\Models\UserDevice;
 use Fourello\Push\Models\UserTopic;
 use App\Models\User;
 use Aws\Sns\SnsClient;
-use Fourello\Push\Messaging\Message;
+use Fourello\Push\Libraries\Messaging\Message;
 class Push {
 
     protected $client;
