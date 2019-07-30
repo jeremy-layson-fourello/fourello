@@ -57,7 +57,7 @@ class Message {
                         ],
                         'category' => $this->category,
                         'sound' => 'default',
-                        'data' => (object) $data
+                        'data' => (object) $this->data
                     ]
                 ]),
             'APNS_SANDBOX' => json_encode(
