@@ -118,7 +118,7 @@ class Push {
                 $platformApplicationArn = config('fourello-push.arn.ios_arn');
             }
 
-            $message = $messsage->generatePayload($device->platform);
+            $message = $message->generatePayload($device->platform);
 
             $client->publish(array(
                 'TargetArn'         => $device->arn,
