@@ -38,6 +38,10 @@ class Push {
         return $this;
     }
 
+    /**
+     * 1. Creates an SNS Platform End Point using the given device token
+     * 2. Saves the registered information into the database
+     */
     public function registerDeviceToken($deviceToken, $platform = 'IOS')
     {
         // check user
@@ -88,7 +92,9 @@ class Push {
      */
     public function publishToUser(Message $message)
     {
-
+        foreach ($this->user->Devices as $device) {
+            $this->publishToArn($message, $device)
+        }
     }
  
     /**
@@ -205,23 +211,6 @@ class Push {
 
             return FALSE;
         } 
-    }
-
-
-    /**
-     * Get all topics using the AWS credential
-     */
-    public function registerTokenToSNS(UserDevice $device, $topic)
-    {
-        try {
-            $result = $this->client->subscribe([
-                'Endpoint' => $device->arn,
-                'Protocol' => 'application',
-                'TopicArn' => $topic->arn,
-            ]);
-        } catch (Exception $e) {
-            
-        }
     }
 
     public function unregisterTokenFromSNS()
