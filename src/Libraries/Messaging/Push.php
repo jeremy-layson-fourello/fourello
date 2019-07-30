@@ -93,7 +93,7 @@ class Push {
     public function publishToUser(Message $message)
     {
         foreach ($this->user->Devices as $device) {
-            $this->publishToArn($message, $device)
+            $this->publishToArn($message, $device);
         }
     }
  
