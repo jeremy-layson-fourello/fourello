@@ -46,52 +46,49 @@ class Message {
 
     public function generatePayload($platform = 'IOS')
     {
-        $payload = [
-            'APNS'  => json_encode(
+        $apns = '';
+        $gcm = '';
+        $default = '';
+
+        $apns = json_encode(
+            (object) [
+                'aps' => 
                 (object) [
-                    'aps' => 
-                    (object) [
-                        'alert' => (object) [
-                            'title' => $this->title,
-                            'body' => $this->message
-                        ],
-                        'category' => $this->category,
-                        'sound' => 'default',
-                        'data' => (object) $this->data
-                    ]
-                ]),
-            'APNS_SANDBOX' => json_encode(
-                (object) [
-                    'aps' => 
-                    (object) [
-                        'alert' => (object) [
-                            'title' => $this->title,
-                            'body' => $this->message
-                        ],
-                        'category' => $this->category,
-                        'sound' => 'default',
-                        'data' => (object) $data
-                    ]
-                ]),
-            'default' => '',
-            'GCM'   => json_encode(
-                (object) [
-                    'notification' => (object) [
-                        'body' => $this->message,
+                    'alert' => (object) [
                         'title' => $this->title,
-                        'sound' => 'default',
+                        'body' => $this->message
                     ],
                     'category' => $this->category,
-                    'data' => (object) $data,
-                    'time_to_live'      => 3600,
-                ])
-        ];
+                    'sound' => 'default',
+                    'data' => (object) $this->data
+                ]
+            ]);
+        $gcm = json_encode(
+            (object) [
+                'notification' => (object) [
+                    'body' => $this->message,
+                    'title' => $this->title,
+                    'sound' => 'default',
+                ],
+                'category' => $this->category,
+                'data' => (object) $this->data,
+                'time_to_live'      => 3600,
+            ]);
 
         if (strtoupper($platform) === 'IOS') {
-            $payload['default'] = $payload['APNS'];
+            $default = $apns;
         } else {
-            $payload['default'] = $payload['GCM'];
+            $default = $gcm;
         }
+
+        $payload = json_encode([
+            'APNS'  => $apns,
+            'APNS_SANDBOX' => $apns,
+            'default' => $default,
+            'GCM'   => $gcm
+        ]);
+
+        
 
         return $payload;
     }
