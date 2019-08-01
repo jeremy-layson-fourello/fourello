@@ -44,6 +44,35 @@ class Message {
         return $this;
     }
 
+    public function setTitle($title)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    public function setCategory($category)
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    public function getData() { return $this->data; }
+    public function getMessage() { return $this->message; }
+    public function getCategory() { return $this->category; }
+    public function getTitle() { return $this->title; }
+
+    public function payloadToArray()
+    {
+        return [
+            'title' => $this->title,
+            'message' => $this->message,
+            'payload' => $this->payload,
+            'category' => $this->category,
+        ];
+    }
+
     public function generatePayload($platform = 'IOS')
     {
         $apns = '';

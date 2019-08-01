@@ -8,6 +8,8 @@ use Fourello\Push\Models\UserTopic;
 use App\Models\User;
 use Aws\Sns\SnsClient;
 use Fourello\Push\Libraries\Messaging\Message;
+use Fourello\Push\Events\FourelloPushed;
+
 class Push {
 
     protected $client;
@@ -95,6 +97,8 @@ class Push {
         foreach ($this->user->Devices as $device) {
             $this->publishToArn($message, $device);
         }
+
+        event(new FourelloPushed($message, $this->user));
     }
  
     /**
