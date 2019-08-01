@@ -68,7 +68,7 @@ class Message {
         return [
             'title' => $this->title,
             'message' => $this->message,
-            'payload' => $this->payload,
+            'payload' => $this->data,
             'category' => $this->category,
         ];
     }
