@@ -5,6 +5,7 @@ use Aws\Sns\Exception\SnsException;
 use Illuminate\Support\Facades\App;
 use Fourello\Push\Models\UserDevice;
 use Fourello\Push\Models\UserTopic;
+use Fourello\Push\Models\UserTopicMember;
 use App\Models\User;
 use Aws\Sns\SnsClient;
 use Fourello\Push\Libraries\Messaging\Message;
@@ -163,9 +164,20 @@ class Push {
         }
     }
 
-    public function publishToTopic()
+    public function publishToTopic(Message $message, $id)
     {
+        $topic = $this->topic->findOrFail($id);
 
+        $client = App::make('aws')->createClient('sns');
+
+        $message = $message->generatePayload();
+
+        $client->publish(array(
+            'TopicArn'         => $topic->arn,
+            'Message'           => $message,
+            'ttl'               => 3600,
+            'MessageStructure'  => 'json'
+        ));
     }
 
     public function getAllTopics() // tested
@@ -248,22 +260,30 @@ class Push {
 
     }
 
-    public function subscribeDeviceToTopic(UserDevice $device, $topicArn)
+    public function subscribeDeviceToTopic(UserDevice $device, UserTopic $topic)
     {
         try {
-            // $topicArn = env('AWS_SNS_TOPIC', AWS_SNS_TOPIC);
+
             $sns = App::make('aws')->createClient('sns');
             $result = $sns->subscribe([
                 'Endpoint' => $device->arn,
                 'Protocol' => 'application',
-                'TopicArn' => $topicArn,
+                'TopicArn' => $topic->arn,
             ]);
 
             $data = [
                 '@metadata' => $result['@metadata'],
-                'SubscriptionArn'   => $result['subscriptionArn']
+                'SubscriptionArn'   => $result['SubscriptionArn']
             ];
-            
+
+            $member = new UserTopicMember();
+            $member->create([
+                'arn'       => $result['subscriptionArn'],
+                'topic_arn' => $topic->arn,
+                'user_id'   => $device->user_id,
+                'user_topic_id' => $topic->id
+            ]);
+
             return $data;
         } catch (AwsException $e) {
             \Log::error($e->getMessage());
@@ -272,16 +292,14 @@ class Push {
         }
     }
 
-    public function unsubscribeDeviceToTopic(UserDevice $device, $subscriptionArn)
+    public function unsubscribeDeviceToTopic(UserTopicMember $membership)
     {
         try {
             $result = $this->client->unsubscribe([
-                'SubscriptionArn' => $subscriptionArn,
+                'SubscriptionArn' => $membership->arn,
             ]);
 
             $data['@metadata'] = $result['@metadata'];
-
-            // $device->delete();
 
             return $data;
         } catch (AwsException $e) {

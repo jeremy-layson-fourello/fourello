@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @since 07.08.2019
  * @version 1.0
  */
-class UserTopic extends AbstractModel
+class UserTopicMember extends AbstractModel
 {
 
     /**
@@ -26,8 +26,10 @@ class UserTopic extends AbstractModel
      * fillable
      */
     protected $fillable = [
-        'label',
         'arn',
+        'topic_arn',
+        'user_topic_id',
+        'user_device_id'
     ];
 
     /**
@@ -37,4 +39,14 @@ class UserTopic extends AbstractModel
     protected $hidden = [
 
     ];
+
+    public function userDevice()
+    {
+        return $this->belongsTo('Fourello\Push\Models\UserDevice;', 'user_id');
+    }
+
+    public function userTopic()
+    {
+        return $this->belongsTo('Fourello\Push\Models\UserTopic', 'user_topic_id');
+    }
 }
