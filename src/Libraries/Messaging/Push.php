@@ -147,11 +147,6 @@ class Push {
         return response()->json(["status" => "Device token processed"], 200);
     }
 
-    public function publishToTopic()
-    {
-
-    }
-
     /**
      * Get a list of registered devices of user
      */
@@ -168,48 +163,79 @@ class Push {
         }
     }
 
-    public function getAllTopics()
+    public function publishToTopic()
+    {
+
+    }
+
+    public function getAllTopics() // tested
+    {
+        return $this->topic->get();
+    }
+
+    public function getSNSAllTopics() // tested
     {
         try {
             $list = $this->client->listTopics([]);
 
-            return $list;
+            return $list['Topics'];
         } catch (AwsException $e) {
             \Log::error($e->getMessage());
 
             return [];
         }
+
+        return [];
     }
 
     /**
      * Get all topics using the AWS credential
      */
-    public function createTopic($name)
+    public function createTopic($name, $label = 'Unlabelled Topic') //tested
     {
         try {
             $data = $this->client->createTopic([
                 'Name'  => $name
             ]);
 
-            return $data;
+            $topic = $this->topic
+                ->create([
+                    'label' => $label,
+                    'arn'   => $data['TopicArn']
+                ]);
+
+            return $topic;
         } catch (Exception $e) {
             \Log::error($e->getMessage());
 
             return FALSE;
         }
+
+        return FALSE;
     }
 
     /**
      * Get all topics using the AWS credential
      */
-    public function deleteTopic($arn)
+    public function deleteTopic($id) // tested
     {
         try {
-            $result = $this->client->deleteTopic([
-                'TopicArn' => $arn,
-            ]);
-            
-            return $result;
+
+            $topic = $this->topic->findOrfail($id);
+
+            if (is_null($topic) === FALSE) {
+                $result = $this->client->deleteTopic([
+                    'TopicArn' => $topic->arn,
+                ]);
+
+                if ((int)$result['@metadata']['statusCode'] === 200) {
+                    $topic->delete();
+
+                    return TRUE;
+                }
+                return FALSE;
+            }
+            return FALSE;
         } catch (AwsException $e) {
             \Log::error($e->getMessage());
 
