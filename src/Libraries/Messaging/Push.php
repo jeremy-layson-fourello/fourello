@@ -301,6 +301,8 @@ class Push {
 
             $data['@metadata'] = $result['@metadata'];
 
+            $membership->delete();
+
             return $data;
         } catch (AwsException $e) {
             // output error message if fails
