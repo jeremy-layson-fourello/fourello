@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUserDevicesTable extends Migration
+class RecreateUserDevicesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -18,7 +18,7 @@ class CreateUserDevicesTable extends Migration
             $table->char('device_token', 150);
             $table->char('platform', 25);
             $table->char('arn', 150);
-            $table->unsignedInteger('user_id')->nullable()->index('user_devices_user_id_foreign');
+            $table->unsignedBigInteger('user_id')->nullable()->index('user_devices_user_id_foreign');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('SET NULL');
             $table->timestamps();
         });
