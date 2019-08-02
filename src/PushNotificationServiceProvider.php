@@ -11,8 +11,9 @@ class PushNotificationServiceProvider extends ServiceProvider {
 
         // publish migrations
         $this->publishes([
-            __DIR__ . '/migrations/2019_07_08_173434_create_user_devices_table.php' => database_path('migrations/2019_07_08_173434_create_user_devices_table.php'),
-            __DIR__ . '/migrations/2019_07_08_173435_create_user_topics_table.php' => database_path('migrations/2019_07_08_173435_create_user_topics_table.php'),
+            __DIR__ . '/migrations/2020_07_08_173434_recreate_user_devices_table.php' => database_path('migrations/2020_07_08_173434_recreate_user_devices_table.php'),
+            __DIR__ . '/migrations/2020_07_08_173435_create_user_topics_table.php' => database_path('migrations/2020_07_08_173435_create_user_topics_table.php'),
+            __DIR__ . '/migrations/2020_07_08_183435_create_user_topic_members_table.php' => database_path('migrations/2020_07_08_183435_create_user_topic_members_table.php'),
         ]);
 
         // publish other files
