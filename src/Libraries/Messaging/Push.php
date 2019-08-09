@@ -279,7 +279,7 @@ class Push {
 
             $member = new UserTopicMember();
             $member->create([
-                'arn'       => $result['subscriptionArn'],
+                'arn'       => $result['SubscriptionArn'],
                 'topic_arn' => $topic->arn,
                 'user_id'   => $device->user_id,
                 'user_topic_id' => $topic->id
