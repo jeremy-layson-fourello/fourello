@@ -281,7 +281,7 @@ class Push {
             $member->create([
                 'arn'       => $result['SubscriptionArn'],
                 'topic_arn' => $topic->arn,
-                'user_id'   => $device->user_id,
+                'user_device_id'   => $device->user_id,
                 'user_topic_id' => $topic->id
             ]);
 
