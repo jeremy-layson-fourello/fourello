@@ -17,6 +17,7 @@ class CreateUserTopicsTable extends Migration
             $table->increments('id');
             $table->char('label', 100);
             $table->char('arn', 150);
+            $table->text('argument');
             $table->timestamps();
         });
     }

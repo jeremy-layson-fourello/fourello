@@ -28,6 +28,7 @@ class UserTopic extends AbstractModel
     protected $fillable = [
         'label',
         'arn',
+        'argument',
     ];
 
     /**
@@ -37,4 +38,9 @@ class UserTopic extends AbstractModel
     protected $hidden = [
 
     ];
+
+    public function members()
+    {
+        return $this->hasMany('Fourello\Push\Models\UserTopicMember');
+    }
 }
