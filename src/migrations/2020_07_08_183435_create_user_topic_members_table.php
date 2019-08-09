@@ -20,10 +20,10 @@ class CreateUserTopicMembersTable extends Migration
             $table->char('topic_arn', 150);
 
             $table->unsignedInteger('user_topic_id')->nullable()->index('user_topic_members_user_topic_id_foreign');
-            $table->foreign('user_topic_id')->references('id')->on('users')->onDelete('SET NULL');
+            $table->foreign('user_topic_id')->references('id')->on('user_topics')->onDelete('SET NULL');
 
             $table->unsignedInteger('user_device_id')->nullable()->index('user_topic_members_user_device_id_foreign');
-            $table->foreign('user_device_id')->references('id')->on('users')->onDelete('SET NULL');
+            $table->foreign('user_device_id')->references('id')->on('user_devices')->onDelete('SET NULL');
             
             $table->timestamps();
         });
