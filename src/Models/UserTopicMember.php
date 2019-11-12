@@ -42,7 +42,7 @@ class UserTopicMember extends AbstractModel
 
     public function userDevice()
     {
-        return $this->belongsTo('Fourello\Push\Models\UserDevice;', 'user_id');
+        return $this->belongsTo('Fourello\Push\Models\UserDevice', 'user_device_id');
     }
 
     public function userTopic()
